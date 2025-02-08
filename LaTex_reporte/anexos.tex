@@ -1,0 +1,75 @@
+\section{Anexos}
+
+\subsection{Anexo I}
+\input{categorias}
+\input{categorias_p2}
+
+\subsection{Anexo II}
+\input{codigo_sarima}
+
+\subsection{Anexo III}
+\subsection{Demostración de desigualdad.}\label{demostracion derivada}
+\begin{align}\label{desigualdad anexo}
+    \frac{d\mu}{dt} &= \frac{D}{I}\left( \frac{(1+t)^{2p} - (1+t)^p-pt(1+t)^{p-1}}{((1+t)^p-1)^2} \right) \geq 0.
+\end{align}
+Esta demostración se realizará utilizando Inducción Matemática. Como caso base, tomemos un plazo $p=6$. 
+\newpage
+\textbf{Caso base. } \\ 
+En primera instancia, notemos que 
+\begin{align*}
+    \cdot \frac{D}{I((1+t)^p-1)^2} &\geq 0,
+\end{align*}
+por lo que basta mostrar que el numerador de \ref{desigualdad anexo} es no negativo. Para ello, notemos que mostrar que
+\begin{align*}
+    (1+t)^{2p} - (1+t)^p-pt(1+t)^{p-1} &\geq 0
+\end{align*}
+es equivalente\footnote{Divídase la ecuación entre $(1+t)^{p-1}$} a mostrar que
+\begin{align}\label{ecuacion equivalente}
+    (1+t)^{p+1} - (1+t) -pt &\geq 0.
+\end{align}
+Sustituyendo $p=6$ en \ref{ecuacion equivalente} llegamos a 
+\begin{align*}
+    (1+t)^5 &\geq 6t+1,
+\end{align*}
+lo cual es verdadero. Asumimos que para $p= k$ se cumple
+\begin{align}\label{ecu}
+    (1+t)^{k-1} \geq kt +t +1 = t(k+1) + 1.
+\end{align}
+Multiplicando \ref{ecu} por $(1+t)$ llegamos a 
+\begin{align}\label{ecu2}
+    (1+t)^k &\geq t(k+1)(1+t) + t + 1.
+\end{align}
+Por otro lado,  
+\begin{align*}\label{ecu2}
+    kt^2+t^2 &\geq 0 \\
+    \Rightarrow kt^2+t^2+kt+2t+1 &\geq kt+2t+1 \\ 
+    \Rightarrow (1+t)(k+1)t &\geq t(k+2)+1.
+\end{align*}
+Por \ref{ecu} y \ref{ecu2} llegamos a 
+\begin{align*}
+    (1+t)^k &\geq t(k+2)+1,
+\end{align*}
+lo que concluye la prueba. \\
+
+\subsection{Demostración de convexidad.} \label{demostracion convexidad}
+En esta sección de los anexos, demostraremos que
+\begin{align*}
+    S &= \left\lbrace x \in \mathbb{R} \hspace{0.15cm} | \hspace{0.15cm} \mu(x) \leq \gamma - RCI \right\rbrace
+\end{align*}
+es convexo, donde $\mu(x)$ está definida como en \ref{mu}.\\
+Notemos que $S\neq \emptyset$ pues $t\in S$, entonces podemos tomar $x_1 \leq x_2 \in S$.  Luego, 
+\begin{align*}
+   x_1 \leq tx_2 + (1-t)x_1 \leq x_2, \text{ para } 0\leq t \leq 1.
+\end{align*}
+Usando el hecho que $\mu(x)$ es creciente y que $x_2 \in S$ llegamos 
+\begin{align*}
+    \mu(x_1) \leq \mu(tx_2 + (1-t)x_1) \leq \mu(x_2) \leq \gamma - RCI,
+\end{align*}
+lo que implica que 
+\begin{align*}
+    \mu(tx_2 + (1-t)x_1) \leq \gamma - RCI \Rightarrow tx_2 - (1-t)x_1 \in S,
+\end{align*}
+lo que concluye la prueba.
+
+
+% poner anexos con codigo para generar datos aleatorios?

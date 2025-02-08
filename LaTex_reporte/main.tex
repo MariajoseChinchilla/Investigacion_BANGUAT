@@ -1,0 +1,87 @@
+\documentclass[12pt]{article} % Establece el tamaño de fuente en 12pt
+% Paquetes para configurar el idioma, codificación y fuente
+\usepackage[utf8]{inputenc} % Codificación de entrada
+\usepackage[spanish]{babel}
+\usepackage[T1]{fontenc} % Codificación de fuente
+%\usepackage[spanish]{babel} % Idioma español
+\usepackage{mathptmx}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{imakeidx}
+\renewcommand{\contentsname}{Índice}
+\usepackage[letterpaper, margin=2.5cm, top=3.5cm, bottom=2.5cm]{geometry} % Configura el tamaño de papel y márgenes
+\makeindex[columns=3, title=Alphabetical Index, intoc]
+\usepackage{setspace} % Para configurar el espaciado entre líneas
+\usepackage{booktabs} % Para las líneas de las tablas
+\doublespacing % Establece un espaciado doble
+\usepackage{siunitx} % Para alinear las cifras decimales
+
+\sisetup{
+ round-mode          = places, % Redondea los números
+  round-precision     = 2, % a 1 cifra decimal
+    output-decimal-marker = {.}, % Usa puntos para los decimales
+  group-separator={,}, % Usa comas como separadores de miles
+  group-minimum-digits    = 4 % Agrupa dígitos por miles a partir de 4 cifras
+}
+
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{mdframed}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.15}
+\usepackage{mathrsfs}
+\usetikzlibrary{arrows}
+\usepackage{xcolor}
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\footnotesize,
+    backgroundcolor=\color{gray!10}, % Color de fondo
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!50!black},
+    stringstyle=\color{orange},
+    showstringspaces=false,
+    breaklines=true,
+    numbers=left, % Muestra números de línea a la izquierda
+    numberstyle=\tiny\color{gray},
+    postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+    frame=single, % Agrega un marco alrededor del código
+    rulecolor=\color{black!30}, % Color del marco
+} 
+
+
+\title{Modelo Matemático para la Precificación de Créditos en Guatemala: Integración de Reservas, Rentabilidad Bancaria y Gestión de Riesgo de Crédito}
+\author{Mariajosé Chincilla Morán}
+\date{\today}
+
+\begin{document}
+\maketitle
+\begin{center}
+\textit{Resumen.}    
+\end{center}
+\textit{Las reservas bancarias, la gestión de liquidez y la implementación de políticas monetarias tienen incidencia en la valoración de activos y los precios de crédito. En Guatemala, la Normativa JM47-2022 establece un marco regulatorio para mejorar la gestión de riesgo de crédito a través de requerimentos específicos para constitución de reservas bancarias. El presente trabajo expone un Modelo Matemático de Precificación de Créditos que garantiza no solo la consitución de reservas bancarias y rentabilidad de las instituciones financieras, sino el cuidado de la liquidez y saturación de los créditohabientes. Así mismo, se construye y demuestra un teorema que garantiza la existencia de una función de personalización de precio. } \\
+\textit{Palabras clave:} Reservas, Modelo SARIMA, Rentabilidad, Saturación, Optimización, Precificación, Teorema, Convexidad.
+\tableofcontents
+%\listoftables
+\listoffigures
+\printindex
+\section{Introducción}
+\input{introduccion} % arreglar esto luego
+%super mega recalcar que gran parte de la investigacion es un contexto para el modelo
+
+%% MARCO TEORICO
+\newpage
+\input{cap1} %reservas bancarias
+
+\input{cap2}
+\input{cap3}
+%ocnclusiones
+\newpage
+\input{anexos}
+%\newpage
+\input{bibliografia}
+\end{document}

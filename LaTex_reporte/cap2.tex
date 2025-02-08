@@ -1,0 +1,148 @@
+\section{Fundamentos e Innovación para la Gestión del Riesgo de Crédito}
+
+% algo sobre las leyes en cuanto a precios de creditos
+\subsection{Modelo matemático avanzado: gestión de riesgo de crédito y optimización de reservas bancarias}
+
+Considerando la Resolución JM-47-2022, el propósito de este modelo matemático avanzado es definir analíticamente un intervalo donde cada punto representa un posible precio de crédito. Dicho intervalo será construido hallando, en primera instancia, una tasa mínima para dejar el margen financiero de un crédito a cero, pero cumplir con los costos pasivos y la constitución de reservas, y como extremo superior del intervalo, una tasa máxima para el precio de crédito, la cual será encontrada resolviendo el problema de optimizar el margen financiero sujeto a dos condiciones: la certeza de la constitución de reservas y el decremento o mantenimiento del nivel de saturación del créditohabiente. A continuación, demostraremos que, aplicando una función convexa sobre este intervalo,los bancos pueden encontrar el punto óptimo de precio en dicho intervalo. Esta estrategia proporciona a las instituciones una metodología para cumplir con los requisitos de constitución de reservas, a la vez que protege la salud financiera de los créditohabientes y asegura su propia rentabilidad. Al elegir adecuadamente su función convexa de personalización de precios, los bancos pueden alcanzar sus objetivos específicos, ofreciendo así una solución integral que garantiza las necesidades de todas las partes involucradas.
+
+\subsubsection{Formulación matemática}
+Comenzaremos por definir la notación que se utilizará. Supondremos que se tiene un créditohabiente con crédito al cual se le identifican características en distintos periodos de tiempo. La notación a utilizar es la siguiente.
+\begin{align*}
+    C_n & \text{: capital adeudado en el tiempo $n$} & MF_n & \text{: margen financiero en el tiempo $n$} \\
+    t_n & \text{: tasa otorgada en el tiempo $n$} & D & \text{: desembolso neto} \\
+    \alpha & \text{: } \frac{\text{tasa pasiva} + \text{FOPA}}{1- \text{encaje}} & PI(x) & \text{: función probabilidad de incumplimiento} \\
+    c_1^n & \text{: categoría interna del créditohabiente en el tiempo $n$} & PDI(x) & \text{: función pérdida dado incumplimiento} \\
+    c_2^n & \text{: categoría externa del créditohabiente en el tiempo $n$} & PE_n & \text{: Pérdida esperada en el tiempo $n$} \\
+    p & \text{ plazos para el crédito} & I_n & \text{: ingresos mensuales en el tiempo $n$} 
+\end{align*}
+
+\subsubsection{Modelación del margen financiero}
+
+Una medida que las instituciones bancarias deben cuidar es su viabilidad financiera. Procedemos a modelar el margen financiero primer punto para la construcción del modelo en el cual estamos interesados.  El margen financiero en el $n$-ésimo punto del tiempo, al cual llamaremos $MF(n)$ está dado por
+\begin{align*}
+    MF(n) &= C_n(t_n-\alpha) - R(n)
+\end{align*}
+donde $R(x)$ es la función que a cada créditohabiente le asigna el monto que provoca en reservas en función de su categoría interna, externa, pérdida dada el incumplimiento y su exposición al momento de incumplimiento en el tiempo $x$. 
+
+La atención ahora se centra en definir la función de reservas $R$. Para esto, tenemos
+\begin{align*}
+    R(x, n) &= PI(x)\cdot PDI(x) \cdot C_n
+\end{align*}
+
+
+De acuerdo a las indicaciones dadas en la JM-47-2022, y como se muestra en el anexo \ref{categorias} y en la \href{https://banguat.gob.gt/sites/default/files/banguat/Publica/Res_JM/2022/Res_JM-47-2022.pdf}{Resolución de la JM47-2022}, página 11, según la categoría del créditohabiente, la función de reservas estará bien definida. Por tanto, la función de reservas es el producto de dos funciones por partes definidas en la Resolución de la JM47-2022.\\
+
+Por el momento, hemos modelado una función relacionada al estudio de la rentabiliad de una institución bancarias, pero aún no hemos modelado nada que nos permita vincular toda esta información con las condiciones de los créditohabientes. Para ello, modelaremos la Relación Cuota Ingreso (RCI) de un créditohabiente. La razón por la cual se eligió modelar el RCI es porque es una medida que transmite mucha información sobre la situación financiera de una persona. Además, es bien conocida que las instituciones bancarias toman esta medida como un parámetro o argumento en sus scores para otorgamiento de créditos. Podemos modelar el $RCI$ de un créditohabiente como
+\begin{align*}
+    RCI &= \frac{d_n}{I_n}.
+\end{align*}
+
+Para este punto, que ya tenemos modelado el margen financiero de una institución bancaria y al Relación Cuota Ingreso de un créditohabiente. El siguiente paso será construir una clústerización de los créditohabientes de acuerdo a su nivel de saturación medido en el RCI. Un ejemplo de posible clusterización es la siguiente
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|l|}
+        \hline
+        \textbf{Nivel de RCI (x)} & \textbf{Interpretación} \\
+        \hline
+        $x \leq 0.4$ & Adecuado \\
+        $0.5 < x \leq 0.6$ & En ruta de alta saturación \\
+        $0.6 < x \leq 0.7$ &  Alta saturación \\
+        $x > 0.7$ & Extrema saturación \\
+        \hline
+    \end{tabular}
+    %\caption{Ejemplo de posibles interpretaciones del RCI}
+    \label{clusters rci}
+\end{table}
+\newpage
+Se ha mencionado con anterioridad que se busca relacionar las condiciones de un créditohabiente, que en este caso son medidas a través del RCI, y el margen financiero. Claramente, parte del problema es desarrollar y resolver un problema de optimización entre la rentabilidad y el riesgo al momento de otorgar un crédito. De esta forma, para aplicar  ecuación del RCI en el problema de optimización, en lugar de enfocarnos en el RCI total de un créditohabiente, nos centraremos en analizar cómo un crédito nuevo impactaría en el RCI actual. Así, si representamos con $RCI'$ al RCI asociado únicamente con el nuevo crédito, y bajo la suposición de un cálculo de interés compuesto y una amortización fija, llegamos a
+\begin{align*}
+    RCI' &= \frac{Dt_n(1+t_n)^p}{I_n((1+t_n)^p-1)}.
+\end{align*}
+
+Para este punto, tenemos todo lo necesario para plantear un problema matemático de optimización. Procedemos a plantear y resolver el problema de optimización dado por
+\begin{center}
+    \textit{Maximizar el margen financiero sujeto a la constitución de reservas y decremento o mantenimiento del nivel de saturación de los créditohabientes.}
+\end{center}
+Una vez encontrado el maximizador, encontraremos el menor precio al que se puede otorgar un crédito para dejar el margen financiero a cero, manteniendo las reservas y los costos pasivos. Con estos dos valores (la tasa maximizadora y la menor tasa), construiremos un intervalo, que corresponderá al intervalo de precios posibles que le corresponde a un créditohabiente. Posteriormente, demostraremos que bajo ciertas condiciones, podemos personalizar el precio de los créditos para cuidar la salud financiera de los créditohabientes y garantizar la rentabilidad de las instituciones bancarias.
+
+\subsection{Optimización: equilibrio riesgo y rentabilidad}
+Procedemos a plantear el problema de optimización mencionado anteriormente.
+
+\subsubsection{Problema de optimización}
+El problema a resolver, suponiendo el plazo de tiempo es fijo, es
+\begin{align*}
+    \max MF \text{ sujeto a } \beta \leq RCI \leq \gamma,
+\end{align*}
+donde $\beta$ y $\gamma$ serán determinadas de acuerdo al clúster de $RCI$  que se determine para el créditohabiente.\footnote{Ver tabla \ref{clusters rci}} Como se había mencionado anteriormente, la condición para la optimización se dará sobre el $RCI'$, la proporción del ingreso del créditohabiente en la cual aumentará el endeudamiento actual de la persona ante un crédito, por lo que podemos replantear el problema como
+\begin{align*}
+    \max MF \text{ sujeto a } 0 \leq RCI' \leq \gamma - RCI.
+\end{align*}
+
+\subsubsection{Solución al problema de equilibrio}
+De la condición $MF \geq 0$ llegamos a
+\begin{align*}
+    t_n &\geq \frac{\Delta R}{C_n-C_{n-1}} + \alpha.
+\end{align*}
+Sin embargo, si consideramos que queremos personalizar el precio para un crédito nuevo, entonces $C_0 = 0$ y $C_1 = D$, donde $D$ es el desembolso neto del crédito. Además, $\Delta R = R_0$, la reservas correspondientes al cliente según su categoría. De esto, podemos encontrar la menor tasa a la cual se puede otorgar el crédito para dejar el margen financiero a cero, pero garantizar la constitución de reservas y la cobertura de los pasivos. Esto es, 
+\begin{align*}
+    t &\geq R_0 +\alpha.
+\end{align*}
+Por otro lado, procedemos a encontrar la tasa máxima a la cual se puede otorgar el crédito maximizando el margen financiero, pero manteniendo el nivel de saturación del cliente. Para resolver el problema de optimización, emplearemos la técnica de optimización convexa.  \\
+La función a maximizar es
+\begin{align}\label{funcion a optimizar}
+    D(t-R(c_1, c_2)-\alpha), \footnote{ donde $c_1$ y $c_2$ son las categorías internas y externas iniciales del créditohabiente. Al decir interna, nos referimos a la categoría del créditohabiente dentro de la institución financiera que está implementando el modelo. La externa se refiere a la categoría en otras instituciones.}
+\end{align}
+Y la función de restricción es
+\begin{align*}
+    0 \leq RCI' \leq \gamma - RCI,
+\end{align*}
+que equivalentemente puede expresarse como
+\begin{align}\label{restriccion optimizacion}
+    0 \leq \frac{Dt(1+t)^p}{I((1+t)^p-1)} &\leq \gamma - RCI.
+\end{align}
+Para optimizar bajo las restricciones, supondremos que el plazo $p$ del crédito es dado. Además, nótese que los ingresos $I$, el desembolso neto $D$, las categorías $c_1$ y $c_2$; los pasivos $\alpha$ y el $RCI$ son constantes para un punto fijo en el tiempo (que corresponde al tiempo en el que se solicita el crédito y el modelo es aplicado para encontrar un precio para dicho crédito). Por tanto, tenemos una optimización en una dimensión para la tasa $t$. \\ 
+Notemos que la función
+\begin{align}\label{mu}
+    \mu(t) &= \frac{Dt(1+t)^p}{I((1+t)^p-1)},
+\end{align}
+siempre que $t\neq 0$ (lo cual siempre ocurrirá en el contexto de nacimiento de créditos), está bien definida. Además, $\mu(t)$ es derivable para todo $t\neq 0$ y 
+\begin{align*}
+    \frac{d\mu}{dt} &= \frac{D}{I}\left( \frac{(1+t)^{2p} - (1+t)^p-pt(1+t)^{p-1}}{((1+t)^p-1)^2} \right) \geq 0,
+\end{align*}
+para $p\geq 6$ (para ver la demostración de esta desigualdad, diríjase al anexo \ref{demostracion derivada}). Por tanto, $\mu(t)$ es creciente. Además, el conjunto $S$ dado por
+\begin{align*}
+    S &= \left\lbrace x \in \mathbb{R} \hspace{0.15cm} | \hspace{0.15cm} \mu(x) \leq \gamma - RCI \right\rbrace
+\end{align*}
+es convexo. (Para ver la demostración de esta aseveración, diríjase al Anexo \ref{demostracion convexidad}). Por tanto, el conjunto de restricciones para la optimización es convexo. Además, la función \ref{funcion a optimizar}, es decir, la función objetivo, dado que $R(c_1,c_2)$ queda plenamente definida por las reglas establecidas en la JM47-2022 y $\alpha$ es conocido, es una función lineal, que claramente, es convexa. Por tanto, podemos aplicar la técnica de optimización convexa. Esto nos permite concluir que todo máximo local será un máximo global sobre el conjunto de maximizadores viables para el problema. Finalmente, dado que \ref{funcion a optimizar} es creciente\footnote{Nótese que su derivada, una vez $R(c_1,c_2)$ y $\alpha$ son conocidos, es igual a $D$, el desembolso neto, que claramente es positivo.}, y el espacio de optimización convexo, el máximo ocurrirá en la frontera, por tanto, la tasa maximizadora es $t = \gamma - RCI$. Por tanto, dada una persona que solicita un crédito, el intervalo de posibles tasas para el crédito está dado por
+\begin{align*}
+    \left[ R +\alpha, \mu^{-1}(\gamma - RCI) \right].
+\end{align*}
+
+Es decir, hemos encontrado una manera de que a cada solicitante de un crédito, se le construya un intervalo de posibles precios. Este intervalo son todos los precios que tienen sentido para el crédito pues en dicho intervalo, el margen financiero es creciente y la saturación del cliente, medida en RCI, se mantiene o disminuye. De esta manera, lo hace falta es encontrar un punto en el intervalo que corresponderá al precio final del crédito. El precio final dependerá de muchos factores adicionales, los cuales la institución financiera que esté otorgando el crédito deberá determinar. Estos factores pueden ser sus metas de Tasa Promedio Ponderada, su situación financiera actual, promociones de crédito específicas, etc. Por tanto, nos limitaremos a dar condiciones suficientes bajo las cuales, una vez elegidos los factores adicionales por parte de la institución financiera, se puede determinar el precio. 
+
+\subsection{Determinación puntual de Precio de Crédito}
+A continuación, mostraremos condiciones suficientes para, una vez construido el intervalo asociado al solicitante de un crédito, se pueda identificar un punto que determinará el precio final del crédito. \\
+\begin{mdframed}[linewidth=1pt,linecolor=black] 
+\textbf{Teorema: Función de determinación de precio.} \\
+Consideremos la solicitud de un crédito dada por un agente al que llamaremos $A$ hacia una institución financiera regida bajo las normativas indicadas por la JM47-2022. Supongamos que la institución financiera desea personalizar sus precios bajo el modelo mostrado en la sección anterior, y sea $[a,b]$ el intervalo de precio asociado al agente $A$. Entonces, cualquier función sobreyectiva sobre $[a,b]$ puede ser adaptada para encontrar el precio del crédito y satisfacer los requerimentos determinados por la institución financiera, siempre que el agente $A$ tenga un nivel de morosidad para el cual el intervalo $[a,b]$ tenga sentido  y los requerimentos sean lógicos.
+\end{mdframed} 
+\textit{Demostración.} \\
+Supongamos que $A$ es un agente solicitante de un crédito y $[a,b]$ es su intervalo\footnote{Al decir que el intervalo tenga sentido, nos referimos a que $a\leq b$. Puede ocurrir que el intervalo no tenga sentido si el nivel de mora es tan alto que sus reservas de crédito induzcan a un precio mayor al que el agente puede pagar según sus condiciones de RCI, en cuyo caso ocurriría $a>b$ y $[a,b]$ no tienen sentido.} de precio asociado construido según el modelo explicado en la sección anterior. Sea $\Omega$ el conjunto de pares ordenados que representan las categorías y el RCI de los créditohabientes y supongamos que hay $m$ requerimentos lógicos determinados por la institución financiera para sus créditos \footnote{Incluyen requerimentos de convergencia a una Tasa Promedio Ponderada específica, el cumplimiento de cierto ingreso financiero establecido como meta para la institución, el cumplimiento de ciertas condiciones para una oferta comercial, etc.}. Todo requerimento lógico puede ser representado mediante alguna de las siguientes: 
+\begin{align*}
+    \forall (x_i,y_i) &\in S_i, \text{ se cumple } \xi_i \leq f(x_i, y_i) \leq \delta_i, \text{ o bien,}\\
+    \forall (x_i,y_i) &\in S_i, \text{ se cumple } \xi_i < f(x_i, y_i) < \delta_i, \text{ o bien,} \\
+    \forall (x_i,y_i) &\in S_i, \text{ se cumple } \xi_i \leq f(x_i, y_i) < \delta_i, \text{ o bien,} \\ 
+    \forall (x_i,y_i) &\in S_i, \text{ se cumple } \xi_i < f(x_i, y_i) \leq \delta_i, \text{ donde } S_i \subseteq \Omega, 
+\end{align*}
+y $f: \Omega \rightarrow (a,b)$ una función. Nótese que esto es posible pues los requerimentos han sido parametrizados y dicha parametrización induce a la función. La función por partes tal que a cada punto en cada subconjunto $S_i$ le asigna su valor bajo la parametrización del requerimento, es la función buscada.  Sea 
+\begin{align*}
+    S &= \bigcup_{k=1}^mS_i.
+\end{align*}
+Definamos $M = f[S] \bigcap [a,b]$ y consideremos la clausura, $\overline{M}$, de dicho conjunto. \footnote{La clausura de un conjunto es la unión del conjunto con todos sus puntos de frontera.} Luego, $\overline{M}$ es la unión de una cantidad finita\footnote{Se asume que ningún requerimento lógico llevará a una estructura de fractal.} de intervalos cerrados de la forma $[a_k,b_k]$, por lo que podemos tomar los puntos en $\overline{M}^C$ construir $f$ en las partes de $[a,b]$ en donde aún no ha sido definida mediante cualquier técnica de interpolación. Finalmente, podemos definir
+\begin{align*}
+    f(a_k) = f(b_k) = f\left(\frac{a_k+b_k}{2}\right), 
+\end{align*}
+pues los puntos dentro de $[a_k,b_k]$ sí están definidos bajo $f$. De esta forma, hemos construido una función sobreyectiva sobre $[a,b]$ que satisface los $m$ requerimentos solicitados. Por tanto, $f$ es una función de personalización de precio.\footnote{Nótese que la demostración constructiva de esta función nos da condiciones suficientes para la función de personalización de precio, mas no son condiciones necesarias, por lo que otro tipo de función podría, posiblemente, ser una función de personalización de precio.}
+
+
+%dibujos de la demostracion 

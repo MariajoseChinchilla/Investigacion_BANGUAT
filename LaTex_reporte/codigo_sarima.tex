@@ -1,0 +1,61 @@
+\begin{itemize}\label{codigo sarima}
+  \item Importar las librerías necesarias.
+\begin{lstlisting}
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from pmdarima.arima import auto_arima
+from statsmodels.tsa.statespace.sarimax import SARIMAX
+\end{lstlisting}
+
+  \item Cargar los datos de las reservas y el ritmo inflacionario.
+\begin{lstlisting}
+reservas = pd.read_excel("db/datos_reservas.xlsx")
+\end{lstlisting}
+
+  \item Crear un DataFrame con un índice de tiempo mensual desde enero de 2018 hasta diciembre de 2023.
+\begin{lstlisting}
+fecha_inicio = '2018-01-01'
+fecha_fin = '2023-12-01'
+fechas = pd.date_range(start=fecha_inicio, end=fecha_fin, freq='MS')
+serie_reservas = reservas.melt(var_name='Anio', value_name='Reservas').sort_values('Anio')['Reservas']
+df_arima_reservas = pd.DataFrame({'Reservas': serie_reservas}, index=fechas)
+df_arima_reservas.index.name = 'Tiempo'
+\end{lstlisting}
+
+  \item Definir una función para encontrar los parámetros ARIMA óptimos y aplicar el modelo SARIMA.
+\begin{lstlisting}
+def encontrar_parametros_arima(df, column_name):
+    modelo = auto_arima(df[column_name], max_p=100, max_d=5, max_q=100, 
+                        seasonal=True, m=12, trace=True)
+    return modelo.order, modelo.seasonal_order
+
+parametros_orden, parametros_orden_estacional = encontrar_parametros_arima(
+    df_arima_reservas, 'Reservas')
+
+model_sarima_reservas = SARIMAX(df_arima_reservas['Reservas'], 
+                                order=parametros_orden, 
+                                seasonal_order=parametros_orden_estacional)
+modelo_fit_sarima_reservas = model_sarima_reservas.fit()
+\end{lstlisting}
+
+  \item Realizar predicciones con el modelo SARIMA ajustado.
+\begin{lstlisting}
+predicciones_sarima_reservas = modelo_fit_sarima_reservas.get_forecast(steps=12)
+predicciones_sarima_reservas = predicciones_sarima_reservas.predicted_mean
+\end{lstlisting}
+
+  \item Generar y guardar un gráfico de líneas con las reservas bancarias por anio.
+\begin{lstlisting}
+plt.figure(figsize=(15, 8))
+sns.lineplot(data=df_arima_reservas.reset_index(), x='Tiempo', y='Reservas', 
+             marker='o', palette=sns.color_palette("husl", len(df_arima_reservas.columns)))
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%b %Y'))
+plt.xticks(rotation=45)
+plt.title('Reservas Bancarias por ANIo')
+plt.xlabel('Mes')
+plt.ylabel('Reservas en millones de quetzales')
+plt.legend(title='ANIo', loc='upper left', bbox_to_anchor=(1, 1))
+\end{lstlisting}
+\end{itemize}
+
