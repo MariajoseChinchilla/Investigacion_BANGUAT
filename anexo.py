@@ -4,10 +4,8 @@ import seaborn as sns
 from pmdarima.arima import auto_arima
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 
-# Cargar los datos
 reservas = pd.read_excel("db/datos_reservas.xlsx")
 
-# Crear un DataFrame con un índice de tiempo mensual
 fecha_inicio = '2018-01-01'
 fecha_fin = '2023-12-01'
 fechas = pd.date_range(start=fecha_inicio, end=fecha_fin, freq='MS')
